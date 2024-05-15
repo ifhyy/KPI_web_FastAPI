@@ -1,6 +1,6 @@
 from fastapi import FastAPI
-from . import models
-from .database import engine, SessionLocal
+from src import models
+from src.database import engine, SessionLocal
 
 
 models.Model.metadata.create_all(bind=engine)

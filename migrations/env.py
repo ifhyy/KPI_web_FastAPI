@@ -52,21 +52,34 @@ def run_migrations_offline() -> None:
 
 
 def run_migrations_online() -> None:
-    """Run migrations in 'online' mode.
+    from sqlalchemy import create_engine
+    import re
+    from pathlib import Path
+    from dotenv import load_dotenv
+    import os
 
-    In this scenario we need to create an Engine
-    and associate a connection with the context.
+    dotenv_path = Path(__file__).resolve().parent.parent / '.env'
+    load_dotenv(dotenv_path)
 
-    """
-    connectable = engine_from_config(
-        config.get_section(config.config_ini_section, {}),
-        prefix="sqlalchemy.",
-        poolclass=pool.NullPool,
-    )
+    url_tokens = {
+        "DB_USER": os.environ.get("POSTGRES_USER", ""),
+        "DB_PASSWORD": os.environ.get("POSTGRES_PASSWORD", ""),
+        "DB_NAME": os.environ.get("POSTGRES_DB", ""),
+        "DB_HOST": os.environ.get("POSTGRES_HOST", ""),
+        "DB_PORT": os.environ.get("POSTGRES_PORT", ""),
+    }
+
+    url = config.get_main_option("sqlalchemy.url")
+
+    url = re.sub(r"\${(.+?)}", lambda m: url_tokens[m.group(1)], url)
+
+    connectable = create_engine(url)
 
     with connectable.connect() as connection:
         context.configure(
-            connection=connection, target_metadata=target_metadata
+            connection=connection, target_metadata=target_metadata,
+            compare_type=True,
+            compare_server_default=True
         )
 
         with context.begin_transaction():
