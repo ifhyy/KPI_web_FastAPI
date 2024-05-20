@@ -2,7 +2,7 @@ import os
 from .config import settings
 
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, DeclarativeBase
+from sqlalchemy.orm import sessionmaker
 
 DATABASE_URL = (f"postgresql://{settings.POSTGRES_USER}:{settings.POSTGRES_PASSWORD}@"
                 f"{settings.POSTGRES_HOST}:{settings.POSTGRES_PORT}/{settings.POSTGRES_DB}")
@@ -18,10 +18,3 @@ def get_db():
         yield db
     finally:
         db.close()
-
-
-class Model(DeclarativeBase):
-    pass
-
-
-
