@@ -59,14 +59,6 @@ class Category(Base):
     items: Mapped[List['Item'] | None] = relationship(back_populates='category')
 
 
-# class Color(Model):
-#     __tablename__ = 'colors'
-#     id: Mapped[int] = mapped_column(primary_key=True, index=True)
-#     name: Mapped[str] = mapped_column(String(64))
-#
-#     items: Mapped[List['Item'] | None] = relationship(back_populates='color')
-
-
 class Item(Base):
     __tablename__ = 'items'
     id: Mapped[int] = mapped_column(primary_key=True, index=True)
@@ -74,8 +66,14 @@ class Item(Base):
     description: Mapped[str | None] = mapped_column(String(256))
     location_id: Mapped[int] = mapped_column(ForeignKey(Location.id), index=True)
     category_id: Mapped[int] = mapped_column(ForeignKey(Category.id), index=True)
-    # color_id: Mapped[int | None] = mapped_column(ForeignKey(Color.id), index=True)
 
     location: Mapped[Location] = relationship(back_populates="items")
     category: Mapped[Category] = relationship(back_populates="items")
-    # color: Mapped[Color | None] = relationship(back_populates="items")
+
+
+# class Color(Model):
+#     __tablename__ = 'colors'
+#     id: Mapped[int] = mapped_column(primary_key=True, index=True)
+#     name: Mapped[str] = mapped_column(String(64))
+#
+#     items: Mapped[List['Item'] | None] = relationship(back_populates='color')

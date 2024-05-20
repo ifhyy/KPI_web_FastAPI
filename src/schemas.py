@@ -4,33 +4,57 @@ from typing import Optional, List
 from pydantic import BaseModel
 
 
-class VisitBase(BaseModel):
-    date: datetime
-    doctor_id: int
-    patient_id: int
+class ItemBase(BaseModel):
+    name: str
+    description: str | None = None
 
 
-class VisitIn(VisitBase):
-    pass
-
-
-class VisitOut(BaseModel):
+class Item(ItemBase):
     id: int
+    location: "Location"
+    category: "Category"
+
+    class Config:
+        orm_mode = True
 
 
-class DoctorBase(BaseModel):
-    full_name = str
-    license_number = str
+class ItemCreate(ItemBase):
+    location_id: int
+    category_id: int
 
 
-class DoctorIn(DoctorBase):
-    pass
+class LocationBase(BaseModel):
+    name: str
 
 
-class DoctorOut(DoctorBase):
+class Location(LocationBase):
     id: int
-    visits: Optional[List[VisitOut]]
+    items: List[Item] = []
+
+    class Config:
+        orm_mode = True
 
 
-class UserBase(BaseModel):
+class LocationCreate(LocationBase):
     pass
+
+
+class CategoryBase(BaseModel):
+    name: str
+
+
+class Category(CategoryBase):
+    id: int
+    items: List[Item] = []
+
+    class Config:
+        orm_mode = True
+
+
+class CategoryCreate(CategoryBase):
+    pass
+
+
+Item.update_forward_refs()
+Location.update_forward_refs()
+Category.update_forward_refs()
