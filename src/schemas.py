@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Optional, List
+from typing import List
 
 from pydantic import BaseModel
 
@@ -22,6 +22,16 @@ class ItemCreate(ItemBase):
     location_id: int
     category_id: int
 
+    class Config:
+        orm_mode = True
+
+
+class ItemUpdate(BaseModel):
+    name: str | None = None
+    description: str | None = None
+    location_id: int
+    category_id: int
+
 
 class LocationBase(BaseModel):
     name: str
@@ -39,6 +49,10 @@ class LocationCreate(LocationBase):
     pass
 
 
+class LocationUpdate(BaseModel):
+    name: str | None = None
+
+
 class CategoryBase(BaseModel):
     name: str
 
@@ -53,6 +67,10 @@ class Category(CategoryBase):
 
 class CategoryCreate(CategoryBase):
     pass
+
+
+class CategoryUpdate(BaseModel):
+    name: str | None = None
 
 
 Item.update_forward_refs()
